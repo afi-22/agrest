@@ -16,23 +16,16 @@ public class DefaultRelationshipOverlay extends BasePropertyOverlay implements A
     private final Boolean writable;
     private final RelatedDataResolver<?> resolver;
 
-    public DefaultRelationshipOverlay(
-            String name,
-            Class<?> sourceType,
-            Class<?> targetType,
-            Boolean toMany,
-            Boolean readable,
-            Boolean writable,
-            RelatedDataResolver<?> resolver) {
+    public DefaultRelationshipOverlay(DefaultRelationshipBuilder defaultRelationshipBuilder) {
 
-        super(name, sourceType);
+        super(defaultRelationshipBuilder.getName(), defaultRelationshipBuilder.getSourceType());
 
         // optional attributes. NULL means not overlaid
-        this.targetType = targetType;
-        this.toMany = toMany;
-        this.readable = readable;
-        this.writable = writable;
-        this.resolver = resolver;
+        this.targetType = defaultRelationshipBuilder.getTargetType();
+        this.toMany = defaultRelationshipBuilder.getToMany();
+        this.readable = defaultRelationshipBuilder.getReadable();
+        this.writable = defaultRelationshipBuilder.getWritable();
+        this.resolver = defaultRelationshipBuilder.getResolver();
     }
 
     @Override

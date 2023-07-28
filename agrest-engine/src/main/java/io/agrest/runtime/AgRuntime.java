@@ -44,7 +44,7 @@ public class AgRuntime {
     private final DeleteProcessorFactory deleteProcessorFactory;
     private final CreateProcessorFactory createProcessorFactory;
     private final UpdateProcessorFactory updateProcessorFactory;
-    private final CreateOrUpdateProcessorFactory createOrUpdateProcessorFactory;
+    private final CreateOrUpdateProcessorFactory processorFactory;
     private final IdempotentCreateOrUpdateProcessorFactory idempotentCreateOrUpdateProcessorFactory;
     private final IdempotentFullSyncProcessorFactory idempotentFullSyncProcessorFactory;
     private final UnrelateProcessorFactory unrelateProcessorFactory;
@@ -80,7 +80,7 @@ public class AgRuntime {
         this.deleteProcessorFactory = injector.getInstance(DeleteProcessorFactory.class);
         this.createProcessorFactory = injector.getInstance(CreateProcessorFactory.class);
         this.updateProcessorFactory = injector.getInstance(UpdateProcessorFactory.class);
-        this.createOrUpdateProcessorFactory = injector.getInstance(CreateOrUpdateProcessorFactory.class);
+        this.processorFactory = injector.getInstance(CreateOrUpdateProcessorFactory.class);
         this.idempotentCreateOrUpdateProcessorFactory = injector.getInstance(IdempotentCreateOrUpdateProcessorFactory.class);
         this.idempotentFullSyncProcessorFactory = injector.getInstance(IdempotentFullSyncProcessorFactory.class);
         this.unrelateProcessorFactory = injector.getInstance(UnrelateProcessorFactory.class);
@@ -138,7 +138,7 @@ public class AgRuntime {
      * @since 5.0
      */
     public <T> UpdateBuilder<T> createOrUpdate(Class<T> type) {
-        return new DefaultUpdateBuilder<>(createUpdateContext(type), createOrUpdateProcessorFactory);
+        return new DefaultUpdateBuilder<>(createUpdateContext(type), processorFactory);
     }
 
     /**

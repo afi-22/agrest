@@ -7,6 +7,7 @@ import io.agrest.HttpStatus;
 import io.agrest.RootResourceEntity;
 import io.agrest.SizeConstraints;
 import io.agrest.access.PathChecker;
+import io.agrest.encoder.DataResponseEncoder;
 import io.agrest.encoder.Encoder;
 import io.agrest.id.AgObjectId;
 import io.agrest.meta.AgEntityOverlay;
@@ -57,15 +58,8 @@ public class SelectContext<T> extends BaseProcessingContext<T> {
      * @deprecated unused anymore, as the context should not be creating a response. It is the responsibility of a
      * pipeline
      */
-    @Deprecated(since = "5.0")
-    public DataResponse<T> createDataResponse() {
-        int status = getResponseStatus() != null ? getResponseStatus() : HttpStatus.OK;
 
-        // support null ResourceEntity for cases with terminal stages invoked prior to SelectStage.CREATE_ENTITY
-        return entity != null
-                ? DataResponse.of(status, entity.getDataWindow()).headers(getResponseHeaders()).total(entity.getData().size()).encoder(encoder).build()
-                : DataResponse.of(status, Collections.<T>emptyList()).headers(getResponseHeaders()).build();
-    }
+
 
     public boolean isById() {
         return id != null;

@@ -129,6 +129,23 @@ public class DefaultSelectBuilder<T> implements SelectBuilder<T> {
         return this;
     }
 
+    private DataResponse<T> createDataResponse() {
+
+        // account for partial context stats for cases with terminal stages invoked prior
+        // to those objects being created
+
+        int status = context.getResponseStatus() != null ? context.getResponseStatus() : HttpStatus.OK;
+
+        RootResourceEntity<T> entity = context.getEntity();
+        List<T> data = entity != null ? entity.getDataWindow() : Collections.emptyList();
+
+        return DataResponse.of(status, data)
+                .headers(context.getResponseHeaders())
+                .total(entity != null ? entity.getData().size() : 0)
+                .encoder(context.getEncoder() != null ? context.getEncoder() : DataResponseEncoder.defaultEncoder())
+                .build();
+    }
+
     /**
      * @since 2.13
      */
@@ -158,23 +175,6 @@ public class DefaultSelectBuilder<T> implements SelectBuilder<T> {
     @Override
     public DataResponse<T> getEmpty() {
         return terminalStage(SelectStage.APPLY_SERVER_PARAMS, this::processEmpty).get();
-    }
-
-    private DataResponse<T> createDataResponse() {
-
-        // account for partial context stats for cases with terminal stages invoked prior
-        // to those objects being created
-
-        int status = context.getResponseStatus() != null ? context.getResponseStatus() : HttpStatus.OK;
-
-        RootResourceEntity<T> entity = context.getEntity();
-        List<T> data = entity != null ? entity.getDataWindow() : Collections.emptyList();
-
-        return DataResponse.of(status, data)
-                .headers(context.getResponseHeaders())
-                .total(entity != null ? entity.getData().size() : 0)
-                .encoder(context.getEncoder() != null ? context.getEncoder() : DataResponseEncoder.defaultEncoder())
-                .build();
     }
 
     private void processEmpty(SelectContext<T> context) {

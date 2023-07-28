@@ -35,44 +35,18 @@ class AgEntityOverlayResolver {
 
     void setReadAccess(String name, boolean readable) {
         if (PathConstants.ID_PK_ATTRIBUTE.equals(name)) {
-
-            for (Map.Entry<String, AgIdPart> e : ids.entrySet()) {
-                AgIdPart oldPart = e.getValue();
-                boolean wasReadable = oldPart.isReadable();
-                if (wasReadable && !readable) {
-                    e.setValue(new DefaultIdPart(oldPart.getName(), e.getValue().getType(), false, e.getValue().isWritable(), e.getValue().getDataReader()));
-                } else if (!wasReadable && readable) {
-                    e.setValue(new DefaultIdPart(oldPart.getName(), e.getValue().getType(), true, e.getValue().isWritable(), e.getValue().getDataReader()));
-                }
-            }
-
+            extracted(readable);
             return;
         }
 
-        AgIdPart id = ids.get(name);
-        if (id != null) {
-            boolean wasReadable = id.isReadable();
-            if (wasReadable && !readable) {
-                ids.put(name, new DefaultIdPart(name, id.getType(), false, id.isWritable(), id.getDataReader()));
-            } else if (!wasReadable && readable) {
-                ids.put(name, new DefaultIdPart(name, id.getType(), true, id.isWritable(), id.getDataReader()));
-            }
+        if (idIsReadable(name, readable)) return;
 
-            return;
-        }
+        if (aIsReadable(name, readable)) return;
 
-        AgAttribute a = attributes.get(name);
-        if (a != null) {
-            boolean wasReadable = a.isReadable();
-            if (wasReadable && !readable) {
-                attributes.put(name, new DefaultAttribute(name, a.getType(), false, a.isWritable(), a.getDataReader()));
-            } else if (!wasReadable && readable) {
-                attributes.put(name, new DefaultAttribute(name, a.getType(), true, a.isWritable(), a.getDataReader()));
-            }
+        rIsReadable(name, readable);
+    }
 
-            return;
-        }
-
+    private void rIsReadable(String name, boolean readable) {
         AgRelationship r = relationships.get(name);
         if (r != null) {
             boolean wasReadable = r.isReadable();
@@ -83,7 +57,48 @@ class AgEntityOverlayResolver {
                 relationships.put(name, new DefaultRelationship(name, r.getTargetEntity(), r.isToMany(), true, r.isWritable(), r.getDataResolver()));
             }
 
-            return;
+        }
+    }
+
+    private boolean aIsReadable(String name, boolean readable) {
+        AgAttribute a = attributes.get(name);
+        if (a != null) {
+            boolean wasReadable = a.isReadable();
+            if (wasReadable && !readable) {
+                attributes.put(name, new DefaultAttribute(name, a.getType(), false, a.isWritable(), a.getDataReader()));
+            } else if (!wasReadable && readable) {
+                attributes.put(name, new DefaultAttribute(name, a.getType(), true, a.isWritable(), a.getDataReader()));
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    private boolean idIsReadable(String name, boolean readable) {
+        AgIdPart id = ids.get(name);
+        if (id != null) {
+            boolean wasReadable = id.isReadable();
+            if (wasReadable && !readable) {
+                ids.put(name, new DefaultIdPart(name, id.getType(), false, id.isWritable(), id.getDataReader()));
+            } else if (!wasReadable && readable) {
+                ids.put(name, new DefaultIdPart(name, id.getType(), true, id.isWritable(), id.getDataReader()));
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    private void extracted(boolean readable) {
+        for (Map.Entry<String, AgIdPart> e : ids.entrySet()) {
+            AgIdPart oldPart = e.getValue();
+            boolean wasReadable = oldPart.isReadable();
+            if (wasReadable && !readable) {
+                e.setValue(new DefaultIdPart(oldPart.getName(), e.getValue().getType(), false, e.getValue().isWritable(), e.getValue().getDataReader()));
+            } else if (!wasReadable && readable) {
+                e.setValue(new DefaultIdPart(oldPart.getName(), e.getValue().getType(), true, e.getValue().isWritable(), e.getValue().getDataReader()));
+            }
         }
     }
 

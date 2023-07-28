@@ -436,7 +436,7 @@ public class AgEntityOverlay<T> {
      */
     public AgEntityOverlay<T> relatedDataResolver(String name, RelatedDataResolverFactory resolverFactory) {
         RelatedDataResolver<?> resolver = resolverFactory.resolver(type, name);
-        relationships.put(name, new DefaultRelationshipOverlay(name, type, null, null, null, null, resolver));
+        relationships.put(name, new DefaultRelationshipOverlay(new DefaultRelationshipBuilder(name, type, null, null, null, null, resolver)));
         return this;
     }
 
@@ -446,7 +446,7 @@ public class AgEntityOverlay<T> {
      * @since 5.0
      */
     public AgEntityOverlay<T> relatedDataResolver(String name, Function<T, ?> reader) {
-        relationships.put(name, new DefaultRelationshipOverlay(name, type, null, null, null, null, resolverForReader(reader)));
+        relationships.put(name, new DefaultRelationshipOverlay(new DefaultRelationshipBuilder(name, type, null, null, null, null, resolverForReader(reader))));
         return this;
     }
 
@@ -466,7 +466,7 @@ public class AgEntityOverlay<T> {
      */
     public <V> AgEntityOverlay<T> toOne(String name, Class<V> targetType, RelatedDataResolverFactory resolverFactory) {
         RelatedDataResolver<?> resolver = resolverFactory.resolver(type, name);
-        relationships.put(name, new DefaultRelationshipOverlay(name, type, targetType, false, null, null, resolver));
+        relationships.put(name, new DefaultRelationshipOverlay(new DefaultRelationshipBuilder(name, type, targetType, false, null, null, resolver)));
         return this;
     }
 
@@ -486,7 +486,7 @@ public class AgEntityOverlay<T> {
      */
     public <V> AgEntityOverlay<T> toOne(String name, Class<V> targetType, boolean readable, boolean writable, RelatedDataResolverFactory resolverFactory) {
         RelatedDataResolver<?> resolver = resolverFactory.resolver(type, name);
-        relationships.put(name, new DefaultRelationshipOverlay(name, type, targetType, false, readable, writable, resolver));
+        relationships.put(name, new DefaultRelationshipOverlay(new DefaultRelationshipBuilder(name, type, targetType, false, readable, writable, resolver)));
         return this;
     }
 
@@ -507,7 +507,7 @@ public class AgEntityOverlay<T> {
      * @since 5.0
      */
     public <V> AgEntityOverlay<T> toOne(String name, Class<V> targetType, Function<T, V> reader) {
-        relationships.put(name, new DefaultRelationshipOverlay(name, type, targetType, false, null, null, resolverForReader(reader)));
+        relationships.put(name, new DefaultRelationshipOverlay(new DefaultRelationshipBuilder(name, type, targetType, false, null, null, resolverForReader(reader))));
         return this;
     }
 
@@ -528,7 +528,7 @@ public class AgEntityOverlay<T> {
      * @since 5.0
      */
     public <V> AgEntityOverlay<T> toOne(String name, Class<V> targetType, boolean readable, boolean writable, Function<T, V> reader) {
-        relationships.put(name, new DefaultRelationshipOverlay(name, type, targetType, false, readable, writable, resolverForReader(reader)));
+        relationships.put(name, new DefaultRelationshipOverlay(new DefaultRelationshipBuilder(name, type, targetType, false, readable, writable, resolverForReader(reader))));
         return this;
     }
 
@@ -548,7 +548,7 @@ public class AgEntityOverlay<T> {
      */
     public <V> AgEntityOverlay<T> toMany(String name, Class<V> targetType, RelatedDataResolverFactory resolverFactory) {
         RelatedDataResolver<?> resolver = resolverFactory.resolver(type, name);
-        relationships.put(name, new DefaultRelationshipOverlay(name, type, targetType, true, null, null, resolver));
+        relationships.put(name, new DefaultRelationshipOverlay(new DefaultRelationshipBuilder(name, type, targetType, true, null, null, resolver)));
         return this;
     }
 
@@ -568,7 +568,7 @@ public class AgEntityOverlay<T> {
      */
     public <V> AgEntityOverlay<T> toMany(String name, Class<V> targetType, boolean readable, boolean writable, RelatedDataResolverFactory resolverFactory) {
         RelatedDataResolver<?> resolver = resolverFactory.resolver(type, name);
-        relationships.put(name, new DefaultRelationshipOverlay(name, type, targetType, true, readable, writable, resolver));
+        relationships.put(name, new DefaultRelationshipOverlay(new DefaultRelationshipBuilder(name, type, targetType, true, readable, writable, resolver)));
         return this;
     }
 
@@ -589,7 +589,7 @@ public class AgEntityOverlay<T> {
      * @since 5.0
      */
     public <V> AgEntityOverlay<T> toMany(String name, Class<V> targetType, Function<T, List<V>> reader) {
-        relationships.put(name, new DefaultRelationshipOverlay(name, type, targetType, true, null, null, resolverForListReader(reader)));
+        relationships.put(name, new DefaultRelationshipOverlay(new DefaultRelationshipBuilder(name, type, targetType, true, null, null, resolverForListReader(reader))));
         return this;
     }
 
@@ -610,7 +610,7 @@ public class AgEntityOverlay<T> {
      * @since 5.0
      */
     public <V> AgEntityOverlay<T> toMany(String name, Class<V> targetType, boolean readable, boolean writable, Function<T, List<V>> reader) {
-        relationships.put(name, new DefaultRelationshipOverlay(name, type, targetType, true, readable, writable, resolverForListReader(reader)));
+        relationships.put(name, new DefaultRelationshipOverlay(new DefaultRelationshipBuilder(name, type, targetType, true, readable, writable, resolverForListReader(reader))));
         return this;
     }
 
